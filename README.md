@@ -1,114 +1,26 @@
-# BilldDesk · 静默无人值守 Fork
+# BilldDesk
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D6)
-![status](https://img.shields.io/badge/status-self--hosted-success)
+本仓库是「BilldDesk」的安卓版本获取入口，附使用资料索引。
 
-> 上游：[galaxy-s10/billd-desk](https://github.com/galaxy-s10/billd-desk) + [galaxy-s10/billd-desk-server](https://github.com/galaxy-s10/billd-desk-server)
->
-> 本仓库在原版基础上 **加了静默被控端模式 + 服务端精简化**，专为单机 / 小规模自部署优化。
+## 安装文件资源（夸克网盘）
 
----
+> **BilldDesk 安装文件资源（夸克网盘）**：[https://pan.quark.cn/s/8197b6397538](https://pan.quark.cn/s/8197b6397538)
 
-## 📁 目录结构
+## 官方项目
 
-```
-.
-├── client/                # Electron 客户端（主控 + 被控同一份代码）
-│   ├── electron-main/     # 主进程（含 silent-mode / win32-actions / privacy-window）
-│   ├── src/               # Vue3 渲染端（含 silentHealth）
-│   └── scripts/           # watchdog.cjs + install/uninstall-silent.ps1
-│
-└── server/                # Koa2 后端（精简化：直播/支付/三方登录 router 已禁用）
-    ├── src/router/        # index.ts 含 DISABLED_ROUTERS 白名单
-    └── src/secret/        # secret.example.ts 模板（cp 改名为 secret.ts 后填值）
-```
+- 上游项目：[GSDPGIT/BilldDesk](https://github.com/GSDPGIT/BilldDesk)
+
+## 更多资料
+
+- [下载与安装教程](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/BilldDesk/%E4%B8%8B%E8%BD%BD%E4%B8%8E%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md)
+- [安卓被控端权限设置](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/BilldDesk/%E5%AE%89%E5%8D%93%E8%A2%AB%E6%8E%A7%E7%AB%AF%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE.md)
+- [手机控制电脑怎么操作](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/BilldDesk/%E6%89%8B%E6%9C%BA%E6%8E%A7%E5%88%B6%E7%94%B5%E8%84%91%E6%80%8E%E4%B9%88%E6%93%8D%E4%BD%9C.md)
+- [无法开启无障碍怎么办](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/BilldDesk/%E6%97%A0%E6%B3%95%E5%BC%80%E5%90%AF%E6%97%A0%E9%9A%9C%E7%A2%8D%E6%80%8E%E4%B9%88%E5%8A%9E.md)
+- [画面卡顿与白屏调优](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/BilldDesk/%E7%94%BB%E9%9D%A2%E5%8D%A1%E9%A1%BF%E4%B8%8E%E7%99%BD%E5%B1%8F%E8%B0%83%E4%BC%98.md)
+- [自建服务器与自定义接口配置](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/BilldDesk/%E8%87%AA%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%A5%E5%8F%A3%E9%85%8D%E7%BD%AE.md)
+- [连接不上排查](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/BilldDesk/%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8A%E6%8E%92%E6%9F%A5.md)
+- [全部软件目录](https://github.com/alipymanbu/Android/blob/master/%E5%85%A8%E9%83%A8%E8%BD%AF%E4%BB%B6%E7%9B%AE%E5%BD%95.md)
 
 ---
 
-## 🆚 与上游的差异
-
-### 客户端（client/）相对 `galaxy-s10/billd-desk`
-
-| 新增能力 | 文件 |
-|---|---|
-| 静默启动 `--silent` flag | `electron-main/silent-mode.ts` |
-| 隐藏窗口 + 跳过任务栏 + 拦截 close | `electron-main/silent-mode.ts` |
-| 开机自启（HKCU Run + Task Scheduler 双保险） | `scripts/install-silent.ps1` |
-| 守护进程（双心跳 + CIM 命令行过滤 + 强杀重启） | `scripts/watchdog.cjs` |
-| Win11 Modern Standby 唤醒防误杀 | `scripts/watchdog.cjs` |
-| 真隐私模式（`setContentProtection` 罩屏，本地黑/远端可见） | `electron-main/privacy-window.ts` |
-| 锁屏 / 关显示器 IPC | `electron-main/win32-actions.ts` |
-| 渲染端心跳 + WebRTC 健康监测（Proxy patch RTCPeerConnection） | `src/utils/silentHealth.ts` |
-| 远控断开自动锁屏（持久化开关） | `electron-main/silent-ipc.ts` + 设置页 UI |
-| 设置页：远程会话 + 隐私模式 UI 块 | `src/views/setting/index.vue` |
-
-详细审计与设计文档：见客户端 commit 历史。
-
-### 服务端（server/）相对 `galaxy-s10/billd-desk-server`
-
-| 修改 | 文件 |
-|---|---|
-| 路由黑名单（禁用直播/支付/三方登录/七牛云相关 router） | `src/router/index.ts` |
-| 远控部署专用 secret 模板 | `src/secret/secret.example.ts` |
-
-被禁用的 17 个 router：`live*`, `srs`, `bilibili`, `tencentcloudCss`, `order`, `wallet*`, `goods`, `giftRecord`, `signin*`, `qqUser`, `wechatUser`, `qiniuData`, `globalMsg`。
-
-理由：原 server 是 `billd-live + billd-desk` 共用代码，直播/支付/第三方登录占了一半 router，对纯远控部署是死代码，且会因 secret 里 `**********` 占位符未填导致进程启动失败。
-
----
-
-## 🚀 快速开始
-
-### 客户端构建（在任意机器上）
-
-```bash
-cd client
-pnpm i               # Node 18.19.0 + pnpm 9
-pnpm run dev         # 开发模式
-pnpm run build:win   # 出 Windows 安装包到 client/electron-release/
-```
-
-### 服务端部署（在你的 Windows 2H4G 上）
-
-**两种选项**：
-
-| 方案 | 适合 | 详细文档 |
-|---|---|---|
-| **A. 原生部署（推荐 2H4G）** | 宝塔 Windows + PM2 + native MySQL/Redis/Nginx；占用最小 ~500MB | [server/NATIVE_DEPLOY.md](server/NATIVE_DEPLOY.md) |
-| B. Docker 部署 | Linux 服务器 或 Windows + Docker Desktop（需要 WSL2，2H4G 紧） | [server/DOCKER_DEPLOY.md](server/DOCKER_DEPLOY.md) |
-
-宝塔 Windows 面板**没有 Docker 插件**，所以 Windows 服务器选 A。
-
-### 客户端连你自己的服务端
-
-打开客户端 → 设置 → 接口配置 → 修改 → 填：
-- `wss`: `wss://你的域名/socket.io/`
-- `axios`: `https://你的域名/api`
-
----
-
-## 🪟 静默被控端（自用，单机）
-
-```powershell
-# 1. 安装（管理员 PowerShell）
-powershell -ExecutionPolicy Bypass -File `
-  client\scripts\install-silent.ps1 `
-  -ExePath "C:\Program Files\BilldDesk\BilldDesk.exe"
-
-# 2. 验证
-Get-Content "$env:APPDATA\BilldDesk\silent\watchdog.log" -Tail 30
-
-# 3. 卸载
-powershell -ExecutionPolicy Bypass -File client\scripts\uninstall-silent.ps1
-```
-
-详细原理：见客户端 [scripts/](client/scripts/) 目录。
-
----
-
-## 📜 License
-
-MIT —— 沿用上游 license。版权归原作者 [shuisheng (galaxy-s10)](https://github.com/galaxy-s10) 所有。
-
-本 fork 的扩展部分（静默模式 / 隐私罩屏 / 守护进程 / 服务端精简化）同样以 MIT 发布。
+> 本仓库由上游项目 fork 而来，原始说明见[上游仓库](https://github.com/GSDPGIT/BilldDesk)。
